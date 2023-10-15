@@ -7,7 +7,7 @@
             <div class="col-md-8">
                 <h1 class="mb-3">{{ $post->title }}</h1>
 
-                <p>by: <a href="#" class="text-decoration-none">{{ $post->user->name }}</a> in <a href="/category/{{ $post->category->slug }}">{{ $post->category->name }}</a></p>
+                <p>by: <a href="/posts?user={{ $post->user->username }}" class="text-decoration-none">{{ $post->user->name }}</a> in <a href="/posts/?category={{ $post->category->slug }}">{{ $post->category->name }}</a></p>
                 
                 <article class="my-3 fs-5">
                     {!! $post->body !!}

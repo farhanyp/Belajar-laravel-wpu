@@ -2,9 +2,27 @@
 @extends('layouts.main')
 
 @section('container')
-    <h1 class="pb-4">
+    <h1 class="mb-3 text-center">
         {{ $title }}
     </h1>
+
+    <div class="row justify-content-center mb-3">
+        <div class="col-md-6">
+            <form action="/posts" method="GET">
+                @if (request('category'))
+                    <input type="hidden" class="form-control" name="category" value={{ request('category') }}>
+                @endif
+
+                @if (request('user'))
+                    <input type="hidden" class="form-control" name="user" value={{ request('user') }}>
+                @endif
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Search.." name="search" value={{ request('search') }}>
+                    <button class="btn btn-outline-secondary" type="submit">Button</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     @if ($posts->count())
         <div class="card mb-3">
@@ -13,9 +31,9 @@
                 <h3 class="card-title"><a href="/posts/{{ $posts[0]->slug }}" class="text-decoration-none text-dark">{{ $posts[0]->title }}</a></h3>
                 <small>
                     <p>by: 
-                        <a href="/authors/{{ $posts[0]->user->username }}" class="text-decoration-none">{{ $posts[0]->user->name }}
+                        <a href="/posts?user={{ $posts[0]->user->username }}" class="text-decoration-none">{{ $posts[0]->user->name }}
                         </a> in 
-                        <a href="/category/{{ $posts[0]->category->slug }}" class="text-decoration-none">{{ $posts[0]->category->name }}
+                        <a href="/posts/?category={{ $posts[0]->category->slug }}" class="text-decoration-none">{{ $posts[0]->category->name }}
                         </a>
                         {{ $posts[0]->created_at->diffForHumans() }}
                     </p>
@@ -24,9 +42,6 @@
                 <a href="/posts/{{ $posts[0]->slug }}" class="text-decoration-none btn btn-primary">Read more</a>
             </div>
         </div>
-    @else
-        <p class="text-center fs-4">No post found.</p>
-    @endif
 
     <div class="container">
         <div class="row">
@@ -34,7 +49,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="card">
                         <div class="position-absolute px-3 py-2 text-white" style="background-color: rgba(0, 0, 0, 0.7)">
-                            <a href="/category/{{ $post->category->slug }}" class="text-white text-decoration-none">
+                            <a href="/posts/?category={{ $post->category->slug }}" class="text-white text-decoration-none">
                                 {{ $post->category->name }}
                             </a>
                         </div>
@@ -43,9 +58,9 @@
                         <h5 class="card-title">{{ $post->title }}</h5>
                         <small>
                             <p>by: 
-                                <a href="/authors/{{ $posts[0]->user->username }}" class="text-decoration-none">{{ $posts[0]->user->name }}
+                                <a href="/posts?user={{ $post->user->username }}" class="text-decoration-none">{{ $post->user->name }}
                                 </a>
-                                {{ $posts[0]->created_at->diffForHumans() }}
+                                {{ $post->created_at->diffForHumans() }}
                             </p>
                         </small>
                         <p class="card-text">S{{ $post->excerpt }}.</p>
@@ -56,4 +71,13 @@
             @endforeach
         </div>
     </div>
+
+    @else
+    <p class="text-center fs-4">No post found.</p>
+    @endif
+
+    <div class="d-flex justify-content-center">
+        {{ $posts->links() }}
+    </div>
+
 @endsection
